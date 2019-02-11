@@ -24,6 +24,7 @@ import com.google.devtools.build.lib.actions.ParamFileInfo;
 import com.google.devtools.build.lib.actions.ParameterFile;
 import com.google.devtools.build.lib.analysis.AnalysisUtils;
 import com.google.devtools.build.lib.analysis.FilesToRunProvider;
+import com.google.devtools.build.lib.analysis.ToolchainContext;
 import com.google.devtools.build.lib.analysis.RuleContext;
 import com.google.devtools.build.lib.analysis.Runfiles;
 import com.google.devtools.build.lib.analysis.RunfilesProvider;
@@ -39,7 +40,9 @@ import com.google.devtools.build.lib.analysis.actions.Template;
 import com.google.devtools.build.lib.analysis.actions.TemplateExpansionAction;
 import com.google.devtools.build.lib.analysis.configuredtargets.RuleConfiguredTarget.Mode;
 import com.google.devtools.build.lib.analysis.test.InstrumentedFilesCollector.InstrumentationSpec;
+import com.google.devtools.build.lib.analysis.platform.ToolchainInfo;
 import com.google.devtools.build.lib.cmdline.LabelConstants;
+import com.google.devtools.build.lib.cmdline.Label;
 import com.google.devtools.build.lib.collect.nestedset.NestedSet;
 import com.google.devtools.build.lib.collect.nestedset.NestedSetBuilder;
 import com.google.devtools.build.lib.rules.cpp.CcInfo;
@@ -64,6 +67,9 @@ public class BazelPythonSemantics implements PythonSemantics {
       FileTypeSet.of(BazelPyRuleClasses.PYTHON_SOURCE),
       "srcs", "deps", "data");
 
+  // TODO:
+  public static final Label TOOLCHAIN_TYPE = Label.parseAbsoluteUnchecked("@io_bazel_rules_python//python:toolchain_type", false);
+  public static final Label RUNTIME_TOOLCHAIN_TYPE = Label.parseAbsoluteUnchecked("@io_bazel_rules_python//python:runtime_toolchain_type", false);
   public static final PathFragment ZIP_RUNFILES_DIRECTORY_NAME = PathFragment.create("runfiles");
 
   @Override
@@ -334,6 +340,13 @@ public class BazelPythonSemantics implements PythonSemantics {
       BazelPythonConfiguration config) {
 
     String pythonBinary;
+
+    if (config.getExperimentalPyToolchain()) {
+      ToolchainInfo toolchainInfo =
+        ruleContext.getToolchainContext().forToolchainType(BazelPythonSemantics.RUNTIME_TOOLCHAIN_TYPE);
+
+      // TODO get pythonBinary path from the toolchain
+    }
 
     BazelPyRuntimeProvider provider = ruleContext.getPrerequisite(
         ":py_interpreter", Mode.TARGET, BazelPyRuntimeProvider.class);

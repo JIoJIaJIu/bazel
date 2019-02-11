@@ -47,7 +47,8 @@ public final class BazelPyBinaryRule implements RuleDefinition {
                 .cfg(HostTransition.INSTANCE)
                 .exec()
                 .value(env.getToolsLabel("//tools/zip:zipper")))
-        .addRequiredToolchains(CppRuleClasses.ccToolchainTypeAttribute(env))
+        //.addRequiredToolchains(CppRuleClasses.ccToolchainTypeAttribute(env))
+        .addRequiredToolchains(BazelPythonSemantics.TOOLCHAIN_TYPE, BazelPythonSemantics.RUNTIME_TOOLCHAIN_TYPE)
         .add(
             attr("$launcher", LABEL)
                 .cfg(HostTransition.INSTANCE)

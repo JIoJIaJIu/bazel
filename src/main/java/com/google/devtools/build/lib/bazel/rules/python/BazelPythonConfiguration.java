@@ -108,6 +108,15 @@ public class BazelPythonConfiguration extends BuildConfiguration.Fragment {
     )
     public boolean experimentalPythonImportAllRepositories;
 
+    @Option(
+      name = "experimental_py_toolchain",
+      defaultValue = "false",
+      documentationCategory = OptionDocumentationCategory.UNDOCUMENTED,
+      effectTags = {OptionEffectTag.LOADING_AND_ANALYSIS},
+      help = "Enable python toolchains support"
+    )
+    public boolean experimentalPyToolchain;
+
      /**
      * Make Python configuration options available for host configurations as well
      */
@@ -171,6 +180,10 @@ public class BazelPythonConfiguration extends BuildConfiguration.Fragment {
 
   public boolean getImportAllRepositories() {
     return options.experimentalPythonImportAllRepositories;
+  }
+
+  public boolean getExperimentalPyToolchain() {
+    return options.experimentalPyToolchain;
   }
 
 }
