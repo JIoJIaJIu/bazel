@@ -193,6 +193,13 @@ py_test(
     deps = [":test_base"],
 )
 
+py_test(
+    name = "nested_py_test",
+    #size = "medium",
+    srcs = ["nested_py_test.py"],
+    deps = [":test_base"],
+)
+
 test_suite(
     name = "windows_tests",
     tags = [
